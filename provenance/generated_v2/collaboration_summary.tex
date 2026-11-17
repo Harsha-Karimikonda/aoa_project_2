@@ -1,0 +1,51 @@
+\subsection{Collaboration and decision record}
+This section organizes the recorded collaboration by task. It is an
+annotation of the session, not a reconstruction of earlier prompts. The
+original available prompts and intermediate outputs are retained below and
+in the accompanying provenance files.
+
+\paragraph{Student direction and confirmed choices.}
+The student supplied the assignment requirements and selected ``Full project,''
+``Use proposed pair,'' and ``Include bonus'' in response to the assistant's
+planning questions. These choices approved volunteer shift assignment and
+emergency depot selection as the two topics, together with an implementation
+and experimental evaluation. The student later requested a newer Python
+version and uv as the package manager, and supplied both team members'
+identifying information. These are the student-directed decisions evidenced
+by the available conversation.
+
+\paragraph{Modeling and architecture proposals.}
+The assistant proposed the two topics, the nonoverlapping-shift staffing
+model, and the arbitrary site--community coverage model. It specified the
+flow construction, the Set Cover reductions, Edmonds--Karp, the greedy
+coverage rule, and the experimental design. Approval of the problem pair is
+recorded; a separate student-authored architecture specification is not
+recorded. These technical proposals are therefore attributed to the
+assistant, rather than retrospectively presented as student prompts.
+
+\paragraph{Code generation and implementation.}
+The assistant generated the algorithm implementations, exhaustive small-case
+oracles, unit tests, benchmark driver, saved-result verification script,
+LaTeX report, plots, and environment configuration. It implemented the
+student's request for uv using a pinned Python 3.15.2 environment and
+regenerated the measurements. Earlier generated source versions and the
+Python 3.9 measurements remain in the provenance directories.
+
+\paragraph{Executed verification and its limits.}
+The assistant executed seven unit tests, including 180 random flow instances
+and 180 random coverage instances checked against exhaustive oracles. It
+ran 60 benchmark instances and 100 separate solution-quality instances, then
+reproduced the saved operation counts, aggregate medians, and quality results.
+It also compiled the PDF and inspected rendered pages. These are
+assistant-executed checks. The correctness proofs were also assistant-generated;
+passing program tests does not constitute an independent student review of
+those proofs.
+
+\paragraph{Student verification status.}
+The available conversation does not yet document student-executed proof
+checks, independent code review, or independently reproduced experiments.
+Such work should be added as a dated follow-up stating who performed the
+check, what was checked, the evidence, and any resulting correction. It must
+not be represented as an earlier prompt or completed review without that
+evidence. The team retains responsibility for the submitted mathematics and
+experimental claims.

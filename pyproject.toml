@@ -1,0 +1,10 @@
+[project]
+name = "aoa-project-2"
+version = "0.1.0"
+description = "Network flow and greedy set cover algorithms with reproducible experiments"
+readme = "README.md"
+requires-python = ">=3.15,<3.16"
+dependencies = []
+
+[tool.uv]
+package = false

@@ -1,0 +1,146 @@
+\subsection{Illustrative Reconstructed Design Dialogue (Not a Transcript)}
+\label{app:reconstructed}
+\noindent\textbf{Label: AI-generated illustration.}
+The dialogue below was written after implementation to explain the final
+design through questions and answers. Both speakers' lines are reconstructed;
+they are not quotations of exchanges that occurred and do not establish
+student authorship of decisions or completed student verification. This
+illustration supplements the recorded exchanges that follow. It does not
+replace the assignment's required exact prompts and intermediate results.
+Selected \emph{actual saved artifacts} are interleaved below and labeled
+separately. Their placement explains the corresponding design topic; it does
+not imply that the illustrative turns were their originating prompts. These
+excerpts are not a claim that every intermediate output has been recovered.
+
+\providecommand{\designturn}[2]{\par\medskip\noindent\textbf{#1 (illustrative):} #2\par}
+
+\designturn{Student}{We need one practical problem solvable by network flow
+and another that is NP-hard. Could volunteer staffing and emergency supply
+depot selection give us clear models without making unrealistic claims?}
+
+\designturn{AI}{Yes, with explicit simplifications. For staffing, represent
+volunteers and shifts as a bipartite eligibility graph. For depot selection,
+use a table listing which communities each candidate site can serve. The
+report should explain that these models are motivated by public-service
+planning, and that the experimental data are synthetic.}
+
+\designturn{Student}{A volunteer might work several shifts. How do we stop
+the algorithm from assigning someone to two simultaneous shifts?}
+
+\designturn{AI}{The current model assumes shifts do not overlap. Eligibility
+captures availability and qualifications; each volunteer also has a maximum
+number of shifts. General overlap conflicts would need additional constraints
+and a new correctness argument. Keeping that assumption explicit makes the
+flow reduction valid for the stated task.}
+
+\designturn{Student}{Under that assumption, what network should the
+implementation construct, and how do we prevent one person from counting
+twice toward the same shift?}
+
+\designturn{AI}{Use source-to-volunteer arcs with workload capacities,
+volunteer-to-shift arcs of capacity one for eligible pairs, and
+shift-to-sink arcs with staffing-demand capacities. The unit middle arcs
+prevent duplicate assignments to a shift. A complete schedule exists exactly
+when the integral maximum flow equals total demand. The proof must map an
+assignment to a flow and a flow back to an assignment.}
+
+\par\medskip\noindent\textbf{Actual preserved intermediate output: initial network construction.}
+The following excerpt is read directly from the first saved implementation,
+\texttt{provenance/generated\_v1/algorithms.py}. It shows both residual-arc
+creation and the three layers of the reduction.
+\lstinputlisting[firstline=37,lastline=52,firstnumber=37,
+  basicstyle=\ttfamily\scriptsize]{provenance/generated_v1/algorithms.py}
+
+\designturn{Student}{Which maximum-flow algorithm gives us an implementation
+that we can inspect and test? Would choosing a more advanced algorithm be
+necessary for this project?}
+
+\designturn{AI}{Edmonds--Karp is sufficient for these experiments. Its BFS
+search and paired reverse residual arcs are straightforward to expose in
+code. Reverse arcs matter: with eligible pairs $(w_1,j_1)$, $(w_1,j_2)$,
+and $(w_2,j_1)$, an initial assignment of $w_1$ to $j_1$ must be revisable
+to obtain both assignments. A targeted test should exercise that rerouting.}
+
+\designturn{Student}{For the depot problem, is mapping its coverage table
+to Set Cover enough to prove NP-hardness?}
+
+\designturn{AI}{That direction alone is insufficient. To prove hardness,
+start with an arbitrary Set Cover instance, create one community per element
+and one candidate depot per set, and preserve the budget and membership
+relation. Prove the yes-if-and-only-if correspondence. Then show that a
+proposed depot selection is polynomially verifiable. The reverse mapping is
+also included to address the assignment's reduction wording.}
+
+\designturn{Student}{Does that proof also establish the result if coverage
+means being within a fixed geographic distance?}
+
+\designturn{AI}{No. The proof covers arbitrary explicit service relations.
+It does not construct coordinates realizing every Set Cover instance. The
+final model therefore uses a supplied coverage table and states that its
+hardness claim does not establish every geometric variant.}
+
+\designturn{Student}{What useful solution can we provide once exact depot
+minimization is NP-hard? How can the report show its limitations?}
+
+\designturn{AI}{Repeatedly choose the site covering the most uncovered
+communities, breaking ties by input index. First check whether the union of
+all coverage sets reaches every community. The greedy method then returns a
+feasible cover, with an $H_n$ approximation guarantee. The six-community
+example in the report makes its limitation concrete: greedy chooses three
+sites, while two suffice.}
+
+\par\medskip\noindent\textbf{Actual preserved intermediate output: initial greedy implementation.}
+This excerpt from the same initial source snapshot shows the feasibility
+check, gain calculation, tie handling, and uncovered-community update.
+\lstinputlisting[firstline=109,lastline=139,firstnumber=109,
+  basicstyle=\ttfamily\scriptsize]{provenance/generated_v1/algorithms.py}
+
+\designturn{Student}{For verification, can we compare against answers that
+do not come from the same algorithm? And how should we evaluate runtime?}
+
+\designturn{AI}{On small staffing instances, enumerate eligible-pair subsets
+to establish the optimum independently of flow. On small depot instances,
+enumerate site subsets in increasing size to establish the optimum. For
+scaling, generate seeded sparse and dense families, exclude generation and
+the exponential oracles from timing, and retain raw measurements. Count BFS
+edge inspections and greedy membership tests as well as seconds.}
+
+\designturn{Student}{If a timing slope is below a theoretical bound, should
+we say the experiment disproves the analysis?}
+
+\designturn{AI}{No. A worst-case upper bound need not be attained by random
+inputs. Compare operation counts with their instance-specific bounds and
+describe timing slopes as observations over the tested sizes. The singleton
+coverage family gives an especially clear check: it forces exactly
+$k(k+1)/2$ membership tests for this implementation.}
+
+\par\medskip\noindent\textbf{Actual preserved intermediate output: original Python 3.9 experiments.}
+These four CSV tables are embedded directly from the preserved run preceding
+the uv/Python upgrade. Each row is an aggregate over three instances. Columns
+give instance size, median seconds, counted operations, the operation bound,
+incidence count, and rounds. They are historical measurements; the main
+report uses the subsequent Python 3.15.2 run.
+
+\noindent\emph{Sparse flow:}
+\lstinputlisting[language={},numbers=none,basicstyle=\ttfamily\scriptsize]{provenance/python39_baseline/flow_sparse.csv}
+\noindent\emph{Dense flow:}
+\lstinputlisting[language={},numbers=none,basicstyle=\ttfamily\scriptsize]{provenance/python39_baseline/flow_dense.csv}
+\noindent\emph{Singleton coverage:}
+\lstinputlisting[language={},numbers=none,basicstyle=\ttfamily\scriptsize]{provenance/python39_baseline/cover_singleton.csv}
+\noindent\emph{Dense coverage:}
+\lstinputlisting[language={},numbers=none,basicstyle=\ttfamily\scriptsize]{provenance/python39_baseline/cover_dense.csv}
+
+\designturn{Student}{Let us use those models and keep the algorithms,
+benchmark driver, and verification code separate. We also need a reproducible
+Python environment. What does the final project provide?}
+
+\designturn{AI}{The final project separates those components, pins Python
+3.15.2, and uses uv for its environment and lockfile. It includes the measured
+CSVs, report figures, code appendix, and saved-result checks. The logged
+automated checks were run by the assistant; the team still needs to review
+the mathematics and document any independent checks it actually performs.}
+
+\par\medskip\noindent\textbf{Actual saved verification output after the upgrade.}
+The following is the saved Python 3.15.2 test and result-replay output,
+not reconstructed speech and not an earlier Python 3.9 result.
+\VerbatimInput[fontsize=\scriptsize,breaklines=true,breakanywhere=true]{provenance/final_checks.txt}

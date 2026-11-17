@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\begin{loglogaxis}[width=.98\columnwidth,height=4.6cm,xlabel={Instance size $k$},ylabel={Counted operations},grid=major,legend style={font=\scriptsize},legend pos=north west, unbounded coords=discard]
+\addplot+[blue,mark=*] table[x=size,y=operations,col sep=comma]{results/flow_sparse.csv};
+\addlegendentry{sparse}
+\addplot[blue,dashed,no marks] table[x=size,y=bound,col sep=comma]{results/flow_sparse.csv};
+\addlegendentry{sparse bound}
+\addplot+[red,mark=square*] table[x=size,y=operations,col sep=comma]{results/flow_dense.csv};
+\addlegendentry{dense}
+\addplot[red,dashed,no marks] table[x=size,y=bound,col sep=comma]{results/flow_dense.csv};
+\addlegendentry{dense bound}
+\end{loglogaxis}
+\end{tikzpicture}

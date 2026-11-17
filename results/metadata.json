@@ -1,0 +1,43 @@
+{
+  "seed": 20261117,
+  "python": "3.15.2 (main, Nov 11 2026, 00:12:23) [Clang 23.1.3 ]",
+  "platform": "macOS-15.8.3-arm64-arm-64bit-Mach-O",
+  "processor": "arm",
+  "parameters": {
+    "repeats": 5,
+    "instances": 3,
+    "minimum_seconds": 0.02
+  },
+  "summary": {
+    "flow_sparse": {
+      "timing_slope": 1.8165118624129415,
+      "operation_slope": 1.898858155629329,
+      "largest_seconds": 0.03245874999265652,
+      "largest_operations": 745356
+    },
+    "flow_dense": {
+      "timing_slope": 2.486478300270365,
+      "operation_slope": 2.734525087222042,
+      "largest_seconds": 0.17174775000603404,
+      "largest_operations": 5659786
+    },
+    "cover_singleton": {
+      "timing_slope": 1.949073750664331,
+      "operation_slope": 1.9900098528662626,
+      "largest_seconds": 0.0071626455028308555,
+      "largest_operations": 131328
+    },
+    "cover_dense": {
+      "timing_slope": 2.1998077362147193,
+      "operation_slope": 2.2728626709503628,
+      "largest_seconds": 0.019253853999543935,
+      "largest_operations": 545355
+    },
+    "quality": {
+      "instances": 100,
+      "mean_ratio": 1.0633333333333332,
+      "max_ratio": 1.3333333333333333,
+      "optimal_count": 79
+    }
+  }
+}

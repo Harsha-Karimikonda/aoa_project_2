@@ -1,0 +1,19 @@
+test_cover_edge_cases (test_algorithms.AlgorithmTests.test_cover_edge_cases) ... ok
+test_flow_edge_cases (test_algorithms.AlgorithmTests.test_flow_edge_cases) ... ok
+test_greedy_counterexample (test_algorithms.AlgorithmTests.test_greedy_counterexample) ... ok
+test_invalid_inputs (test_algorithms.AlgorithmTests.test_invalid_inputs) ... ok
+test_random_cover_against_exact_and_bound (test_algorithms.AlgorithmTests.test_random_cover_against_exact_and_bound) ... ok
+test_random_flow_against_exhaustive_oracle (test_algorithms.AlgorithmTests.test_random_flow_against_exhaustive_oracle) ... ok
+test_reverse_edge_rerouting (test_algorithms.AlgorithmTests.test_reverse_edge_rerouting) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.005s
+
+OK
+PASS: all 60 recorded operation counts reproduced exactly
+PASS: every count satisfies its theoretical bound
+PASS: singleton counts equal k(k+1)/2
+PASS: all 20 aggregate CSV rows match the raw medians
+PASS: all 100 quality results reproduced against the exact oracle
+/Users/hkarimkonda/Documents/aoa_project_2/.venv/bin/python
+3.15.2

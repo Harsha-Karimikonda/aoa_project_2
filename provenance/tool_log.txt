@@ -1,0 +1,124 @@
+TOOL LOG (manually assembled; not an exhaustive raw tool-call export)
+
+Environment inspection:
+- pwd, rg --files, ls -la: the project folder was empty.
+- python3 -m pip --version: pip 21.2.4, Python 3.9.
+- command -v: no pdflatex, latexmk, tectonic, or bibtex initially installed.
+- Python importlib checks: numpy, matplotlib, scipy, pytest absent.
+- curl -I --max-time 15 https://pypi.org/simple/matplotlib/:
+  exit 6, could not resolve host under the default network sandbox.
+
+Read-only source searches using web.run:
+Queries included:
+  site.cs.princeton.edu maximum flow bipartite matching Edmonds Karp
+  site.math.mit.edu Karp reducibility among combinatorial problems set covering pdf
+  site.cs.dartmouth.edu greedy set cover approximation harmonic
+  site.redcross.org volunteer shifts scheduling availability
+  site.fema.gov points of distribution locations population accessibility
+  site.overleaf.com latex templates ACM conference proceedings template acmart
+  Edmonds Karp 1972 theoretical improvements algorithmic efficiency network flow 19 248 264
+  Chvatal 1979 greedy heuristic set covering 4 233 235
+Primary references are recorded in report/references.bib.
+FEMA PDF direct open: HTTP 403; its indexed description supported the limited
+motivation used in the report. Karp's large PDF open failed on content length.
+No claim is made that those full PDF contents were retrieved by that call.
+The Red Cross page was opened successfully.
+
+LaTeX tool installation:
+curl -L --fail --max-time 30 https://api.github.com/repos/tectonic-typesetting/tectonic/releases/latest -o /tmp/aoa-tectonic-release.json
+Result: downloaded release metadata; arm64 macOS asset selected.
+curl -L --fail --max-time 60 https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-aarch64-apple-darwin.tar.gz -o /tmp/aoa-tectonic.tar.gz
+Result: downloaded 20.6 MiB release archive using approved network execution.
+tar -xzf /tmp/aoa-tectonic.tar.gz -C tools
+tools/tectonic --version
+Result: Tectonic 0.17.0.
+
+Source generation:
+functions.exec orchestrated exec_command and apply_patch calls.
+The assistant emitted code and LaTeX directly as patch payloads, without
+additional natural-language user prompts. Final files and initial snapshots
+are included. Intermediate path fixes moved the report entry point to root
+main.tex and changed paths to permit Overleaf compilation from the ZIP root.
+No third-party Python packages were installed; PGFPlots reads CSVs in LaTeX.
+
+Verification command:
+python3 -m unittest discover -s tests -v
+Result: 7 tests passed, including 180 random flow oracle cases and 180 random
+coverage oracle cases. Initial observed output: Ran 7 tests in 0.007s; OK.
+
+Experiment command:
+python3 -m src.experiments
+Result: completed 60 timing instances (four families, five sizes, three seeds)
+with five timing batches each, plus 100 exact-oracle quality cases.
+Exact values, machine details and parameters are in results/metadata.json;
+all raw timing/operation data are in results/raw_timings.csv.
+Mean greedy/optimal ratio: 1.0633333333333332.
+Maximum observed ratio: 1.3333333333333333.
+Greedy optimal in 79 of 100 quality cases.
+Every measured operation count passed the applicable theoretical count bound.
+
+Later compilation/verification output is saved in provenance/build_log.txt
+and provenance/final_checks.txt when available.
+
+Additional source verification:
+web.run searched for:
+  site.usace.army.mil points distribution guide POD location population pdf
+  site.training.fema.gov points distribution site selection population served
+Opened https://www.reginfo.gov/public/do/DownloadDocument?objectID=45389901
+Result: FEMA Logistics Capability Assistance Tool, State Content Guide,
+167-page PDF. Found Questions 25-26, printed pp. 65-67, discussing distribution
+locations and population needs. This accessible primary source replaced the
+initial inaccessible FEMA guide in the final bibliography.
+Also opened https://preptoolkit.fema.gov/web/ltap-community/training;
+its description confirms FEMA Points of Distribution training. Not separately
+cited because the final guide more directly supports the problem motivation.
+
+PDF verification:
+Initial compilation revealed malformed citations for missing-year web entries.
+Changing the bibliography years to explicit "n.d." fixed all citation labels.
+Initial bibliography warnings also disappeared after adding Karp's publisher
+address. PDF pages were rendered using tools/inspect_pdf.swift and visually
+checked. Appendix text was enlarged and switched to one column. A final
+layout pass removed overfull text and figure boxes.
+Updated source versions before these fixes are in provenance/generated_v2/.
+
+Final artifact checks:
+python3 -m tools.verify_results
+Result: all 60 timed instance operation counts reproduced exactly without
+retiming; every count was within the stated bound; singleton counts equaled
+k(k+1)/2; all 20 aggregate rows equaled raw medians; all 100 quality cases
+reproduced their recorded greedy and exact solution sizes.
+This extra verification source is included in the report's code appendix.
+Only path, figure sizing, and number-format changes were made to the experiment
+driver after timing; the algorithm source remained unchanged.
+
+Python / uv migration (user-requested follow-up):
+Consulted https://www.python.org/downloads/ for stable Python versions and
+https://docs.astral.sh/uv/getting-started/installation/ plus
+https://docs.astral.sh/uv/guides/projects/ for installation and project setup.
+Downloaded https://astral.sh/uv/install.sh and inspected its installation flags.
+UV_NO_MODIFY_PATH=1 sh /tmp/aoa-uv-install.sh
+Result: uv 0.13.9 installed in /Users/hkarimkonda/.local/bin.
+uv python install 3.15.2
+Result: managed CPython 3.15.2 installed.
+uv python update-shell
+Result: .bash_profile and .bashrc created with the user executable directory
+on PATH. Verified that a new bash login shell locates uv.
+uv sync
+Result: .venv created with CPython 3.15.2 and uv.lock generated.
+Added pyproject.toml, .python-version and .vscode/settings.json.
+Replaced typing.List/Set/Tuple with built-in list/set/tuple annotations.
+uv run --locked python -m unittest discover -s tests -v
+Result: all seven tests passed on Python 3.15.2.
+uv run --locked python -m src.experiments
+Result: current results regenerated on Python 3.15.2; original Python 3.9
+results preserved as historical artifacts in provenance/python39_baseline/.
+The temporary UV_CACHE_DIR override used by sandboxed commands only changes
+cache placement and does not change the project's uv configuration.
+
+Collaboration appendix presentation update:
+Added an annotated task-based decision record while preserving the available
+original prompts and intermediate generated files. Distinguished documented
+student choices from assistant modeling, code generation, and executed checks.
+No independent student verification was claimed without supporting information.
+Recompiled the report and rebuilt the Overleaf archive.

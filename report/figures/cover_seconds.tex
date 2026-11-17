@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\begin{loglogaxis}[width=.98\columnwidth,height=4.6cm,xlabel={Instance size $k$},ylabel={Median runtime (seconds)},grid=major,legend style={font=\scriptsize},legend pos=north west, unbounded coords=discard]
+\addplot+[blue,mark=*] table[x=size,y=seconds,col sep=comma]{results/cover_singleton.csv};
+\addlegendentry{singleton}
+\addplot+[red,mark=square*] table[x=size,y=seconds,col sep=comma]{results/cover_dense.csv};
+\addlegendentry{dense}
+\end{loglogaxis}
+\end{tikzpicture}
